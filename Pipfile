@@ -1,0 +1,22 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+absl-py = "==0.12.0"
+attrs = "==21.2.0"
+mediapipe = "==0.8.4.2"
+numpy = "==1.20.3"
+opencv-contrib-python = "==4.5.2.52"
+protobuf = "==3.17.2"
+six = "==1.16.0"
+tk = "*"
+pyserial = "*"
+pillow = "*"
+pyinstaller = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
