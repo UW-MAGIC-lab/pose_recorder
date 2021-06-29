@@ -41,33 +41,42 @@ class CSVWriter(object):
       'image_width': self.image_width,
       'fps': self.fps
     }
-    for landmark in mp_holistic.PoseLandmark._member_names_:
-      x = results.pose_landmarks.landmark[mp_holistic.PoseLandmark[landmark]].x
-      y = results.pose_landmarks.landmark[mp_holistic.PoseLandmark[landmark]].y
-      csv_data[f'{landmark}_x'] = x
-      csv_data[f'{landmark}_y'] = y
+    for landmark_id in mp_holistic.PoseLandmark._member_names_:
+      landmark = results.pose_landmarks.landmark[mp_holistic.PoseLandmark[landmark_id]]
+      landmark_x, landmark_y, landmark_z = [None, None, None]
+      if landmark.visibility > 0.6:
+        landmark_x = landmark.x
+        landmark_y = landmark.y
+        landmark_z = landmark.z
+      csv_data[f'{landmark_id}_x'.lower()] = landmark_x
+      csv_data[f'{landmark_id}_y'.lower()] = landmark_y
+      csv_data[f'{landmark_id}_z'.lower()] = landmark_z
 
-    for landmark in mp_holistic.HandLandmark._member_names_:
+    for landmark_id in mp_holistic.HandLandmark._member_names_:
+      l_x, l_y, l_z, r_x, r_y, r_z = [None, None, None, None, None, None]
       if results.left_hand_landmarks:
-        l_x = results.left_hand_landmarks.landmark[mp_holistic.HandLandmark[landmark]].x
-        l_y = results.left_hand_landmarks.landmark[mp_holistic.HandLandmark[landmark]].y
-      else:
-        l_x = None
-        l_y = None
+        lh_landmark = results.left_hand_landmarks.landmark[mp_holistic.HandLandmark[landmark_id]]
+        if lh_landmark.visibility > 0.6:
+          l_x = lh_landmark.x
+          l_y = lh_landmark.y
+          l_z = lh_landmark.z
       if results.right_hand_landmarks:
-        r_x = results.right_hand_landmarks.landmark[mp_holistic.HandLandmark[landmark]].x
-        r_y = results.right_hand_landmarks.landmark[mp_holistic.HandLandmark[landmark]].y
-      else:
-        r_x = None
-        r_y = None
-      csv_data[f'L_{landmark}_x'] = l_x
-      csv_data[f'L_{landmark}_y'] = l_y
-      csv_data[f'R_{landmark}_x'] = r_x
-      csv_data[f'R_{landmark}_y'] = r_y
+        rh_landmark = results.right_hand_landmarks.landmark[mp_holistic.HandLandmark[landmark_id]]
+        if rh_landmark.visibility > 0.6:
+          r_x = rh_landmark.x
+          r_y = rh_landmark.y
+          r_z = rh_landmark.z
+      csv_data[f'L_{landmark_id}_x'.lower()] = l_x
+      csv_data[f'L_{landmark_id}_y'.lower()] = l_y
+      csv_data[f'L_{landmark_id}_z'.lower()] = l_z
+      csv_data[f'R_{landmark_id}_x'.lower()] = r_x
+      csv_data[f'R_{landmark_id}_y'.lower()] = r_y
+      csv_data[f'R_{landmark_id}_z'.lower()] = r_z
 
-    csv_data['timestamp'] = f'{datetime.now(timezone.utc)}'
+    csv_data['timestamp'.lower()] = f'{datetime.now(timezone.utc)}'
     return csv_data
 
   def __del__(self):
     """TODO: add docstring"""
-    self.file.close()
+    if self.file:
+      self.file.close()

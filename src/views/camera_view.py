@@ -3,6 +3,7 @@ import tkinter
 from tkinter import font
 from tkinter import ttk
 from views.utils.rounded_button import RoundedButton
+from views.utils.recording_indicator import RecordingIndicator
 
 class CameraView(tkinter.Frame):
 
@@ -17,6 +18,7 @@ class CameraView(tkinter.Frame):
     self.height = parent.winfo_screenheight()
     self.fps = fps
     self.filename = None
+    self.menu_font = font.Font(family='Helvetica', size=18, weight='bold')
 
     self._draw_control_panel(bg)
     self._draw_left_menu(bg)
@@ -30,7 +32,7 @@ class CameraView(tkinter.Frame):
     self.canvas_area.create_image(0, 0, image=self.photo, anchor='nw')
 
   def update_directory(self):
-    self.status_dir.configure(text = f'Save to:\n\n {self.filename}')
+    self.status_dir.configure(text = f'Save to: {self.filename}')
 
   def _draw_status_bar(self):
     self.status_frame = tkinter.Frame(self, height=self.height * 0.2)
@@ -38,29 +40,27 @@ class CameraView(tkinter.Frame):
     self.status.pack(side='left')
 
   def _draw_left_menu(self, bg):
-    menu_font = font.Font(family='Helvetica', size=18, weight='bold')
     self.left_menu = tkinter.Frame(self, width=self.width*0.2, bg=bg)
-    self.status_fps = tkinter.Label(
-        self.left_menu, fg='white', wraplength=300, justify="left",
-        text=f'FPS:{self.fps}', bg=bg,
-        font=menu_font, pady=8)
-    self.status_fps.pack(anchor='nw')
+    self.recording_indicator = RecordingIndicator(self.left_menu)
+
     self.select_dir_btn = RoundedButton(
-        self.left_menu, border_radius=3, padding=8, color="#4986E7", text='Save File')
+        self.left_menu, border_radius=3, padding=8, color="#4986E7", text='Save As')
     self.select_dir_btn.pack(anchor='nw')
-    self.status_dir = tkinter.Label(
-      self.left_menu, fg='white', wraplength=300, justify="left",bg=bg,
-      font=menu_font, pady=8)
-    self.update_directory()
+
+    self.start_btn = RoundedButton(
+        self.left_menu, border_radius=3, padding=8, color="#16A765", text='Start Camera', enabled=False)
+    self.start_btn.pack(anchor='nw')
+
+    self.stop_btn = RoundedButton(
+        self.left_menu, border_radius=3, padding=8, color="#FA573C", text='Stop Camera', enabled=False)
+    self.stop_btn.pack(anchor='nw')
+
     self.start_record_btn = RoundedButton(
-        self.left_menu, border_radius=3, padding=8, color="#7BD148", text='Start Recording')
+        self.left_menu, border_radius=3, padding=8, color="#7BD148", text='Start Recording', enabled=False)
     self.start_record_btn.pack(anchor='n')
-    # self.start_record_btn.itemconfigure(state='hidden')
     self.stop_record_btn = RoundedButton(
-        self.left_menu, border_radius=3, padding=8, color="#FF7537", text='Stop Recording')
+        self.left_menu, border_radius=3, padding=8, color="#FF7537", text='Stop Recording', enabled=False)
     self.stop_record_btn.pack(anchor='n')
-    # self.stop_record_btn.itemconfigure(state='hidden')
-    self.status_dir.pack(anchor='nw')
 
 
 
@@ -77,11 +77,13 @@ class CameraView(tkinter.Frame):
   def _draw_control_panel(self, bg):
     self.controls = tkinter.Frame(self, width=self.width*0.6, height=self.height * 0.2, bg=bg, pady=8)
     self.controls.grid(row=0, column=1, sticky="ew")
-
-    self.start_btn = RoundedButton(
-        self.controls, border_radius=3, padding=8, color="#16A765", text='Start Camera')
-    self.start_btn.pack( side='left')
-
-    self.stop_btn = RoundedButton(
-        self.controls, border_radius=3, padding=8, color="#FA573C", text='Stop Camera')
-    self.stop_btn.pack( side='left')
+    self.status_dir = tkinter.Label(
+        self.controls, fg='white', justify="left", bg=bg,
+        font=self.menu_font, pady=8, padx=8)
+    self.update_directory()
+    self.status_dir.pack(side='left')
+    self.status_fps = tkinter.Label(
+        self.controls, fg='white', wraplength=300, justify="left",
+        text=f'FPS:{self.fps}', bg=bg,
+        font=self.menu_font, pady=8, padx=8)
+    self.status_fps.pack(side='right')

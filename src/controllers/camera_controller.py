@@ -30,30 +30,37 @@ class CameraController():
     if self.running:
       self.root.after(self.delay, self.update_frame)
 
-    # instantiate models
-    #
-    # hook up viewlogic bindings
-    #
-
   def _attach_bindings(self):
     def start_camera():
       self.running = True
       self.update_frame()
       self.view.status_fps.configure(text=f'FPS: {self.camera.fps}')
       self.view.status.configure(text=f'Last action: Started Camera')
+      self.view.start_record_btn.enable()
+      self.view.stop_record_btn.enable()
+      self.view.stop_btn.enable()
+      self.view.start_btn.disable()
 
     def stop_camera():
       self.running = False
       self.update_frame()
       self.view.status_fps.configure(text=f'FPS: {self.camera.fps}')
       self.view.status.configure(text=f'Last action: Stopped Camera')
+      self.view.start_record_btn.disable()
+      self.view.stop_record_btn.disable()
+      self.view.stop_btn.disable()
+      self.view.start_btn.enable()
+      if self.recording:
+        stop_recording()
 
     def start_recording():
       self.recording = True
+      self.view.recording_indicator.toggle()
       self.view.status.configure(text=f'Last action: Started Recording to CSV')
 
     def stop_recording():
       self.recording = False
+      self.view.recording_indicator.toggle()
       self.view.status.configure(text=f'Last action: Stopped Recording to CSV')
 
     def select_source():
@@ -72,12 +79,15 @@ class CameraController():
           fps=self.view.fps
       )
       self.view.status.configure(text=f'Last action: Selected Directory')
+      self.view.start_btn.enable()
 
+    self.view.select_dir_btn.command = select_source
     self.view.start_btn.command = start_camera
+    self.view.stop_btn.command = stop_camera
     self.view.start_record_btn.command = start_recording
     self.view.stop_record_btn.command = stop_recording
-    self.view.stop_btn.command = stop_camera
-    self.view.select_dir_btn.command = select_source
+
+
 
   def __del__(self):
     """TODO: add docstring"""
