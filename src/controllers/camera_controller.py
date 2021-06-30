@@ -13,11 +13,13 @@ class CameraController():
     self.recording = False
 
   def render(self):
-    self.camera = VideoCapture()
-    self.delay = int(1000/self.camera.fps)
     # instantiate view
     self.view = CameraView(self.root)
     self.view.pack()
+    self.view.update()
+    # instantiate models
+    self.camera = VideoCapture(height=self.view.canvas_area.winfo_height(), width=self.view.canvas_area.winfo_width())
+    self.delay = int(1000/self.camera.fps)
     self._attach_bindings()
 
   def update_frame(self):
