@@ -81,7 +81,8 @@ class CameraController():
           fps=self.view.fps
       )
       self.view.status.configure(text=f'Last action: Selected Directory')
-      self.view.start_btn.enable()
+      if self.filename:
+        self.view.start_btn.enable()
 
     self.view.select_dir_btn.command = select_source
     self.view.start_btn.command = start_camera
