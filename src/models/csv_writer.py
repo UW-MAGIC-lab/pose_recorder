@@ -25,14 +25,14 @@ class CSVWriter(object):
 
   def start_csv_document(self, csv_dict):
     # write headers
-    self.file = open(f'{self.filename}', 'w')
+    self.file = open(f'{self.filename}', 'w', newline="", encoding='utf-8')
     keys = list(csv_dict.keys())
     writer = DictWriter(self.file, keys)
     writer.writeheader()
     self.file.close()
     # prepare document for writing data
     # change to append only mode to improve performance
-    self.file = open(f'{self.filename}', 'a+')
+    self.file = open(f'{self.filename}', 'a+', newline='')
     self.writer = DictWriter(self.file, keys)
 
   def results_to_csv_dict(self, results):
