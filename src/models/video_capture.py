@@ -8,7 +8,6 @@ import PIL.Image
 import threading
 import cv2
 from mediapipe import solutions
-import numpy as np
 mp_drawing = solutions.drawing_utils
 mp_holistic = solutions.holistic
 
@@ -93,6 +92,7 @@ class VideoCapture():
       self.ret = ret
       self.frame = frame
       self.results = results
+      self.fps = int(self.vid.get(cv2.CAP_PROP_FPS))
 
       # sleep for next frame
       time.sleep(1/self.fps)

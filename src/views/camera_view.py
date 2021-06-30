@@ -12,13 +12,13 @@ class CameraView(tkinter.Frame):
       Main Camera View
     """
     super().__init__(parent)
+    # need to update in order to get access to parent's width & height
     self.update()
     bg = parent["bg"]
     self["bg"] = bg
     self.parent = parent
     self.width = parent.winfo_width()
     self.height = parent.winfo_height()
-    print(f'width: {parent.winfo_width()}, height: {parent.winfo_height()}')
     self.fps = fps
     self.filename = None
     self.menu_font = font.Font(family='Helvetica', size=18, weight='bold')
@@ -29,6 +29,8 @@ class CameraView(tkinter.Frame):
     self._draw_status_bar()
     self.canvas_area = tkinter.Canvas(self, width=self.width*0.6, height=self.height * 0.8, bg=bg)
     self._arrange_view_grid()
+    # row/column configure are necessary to make the widget fill the entire space of the container
+    # TODO: extract ViewFrame into own class, have CameraView inherit from ViewFrame
     self.grid_columnconfigure(0, weight=1)
     self.grid_columnconfigure(1, weight=1)
     self.grid_columnconfigure(2, weight=1)
@@ -80,7 +82,7 @@ class CameraView(tkinter.Frame):
                          sticky="nsew")
     self.canvas_area.grid(row=1, column=1, sticky="nsew")
     self.status_frame.grid(row=2, column=0, columnspan=3,
-                           rowspan=2, sticky="ew")
+                           rowspan=2, sticky="sew")
 
   def _draw_control_panel(self, bg):
     self.controls = tkinter.Frame(self, width=self.width*0.6, height=self.height * 0.2, bg=bg, pady=8)

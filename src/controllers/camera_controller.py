@@ -27,6 +27,7 @@ class CameraController():
     ret, frame = self.camera.get_frame()
     if ret:
       self.view.update_canvas(frame)
+      self.view.status_fps.configure(text=f'FPS: {self.camera.fps}')
       if self.writer and self.recording:
         self.writer.add(self.camera.results)
     if self.running:
