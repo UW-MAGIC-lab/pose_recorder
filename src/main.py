@@ -34,5 +34,6 @@ class App:
 if __name__ == "__main__":
     root = tkinter.Tk()
     root.configure(bg="#333333")
+    root.geometry(f'{root.winfo_screenwidth()}x{root.winfo_screenheight()}')
     App(root, "MAGIC Pose Recorder")
     root.mainloop()

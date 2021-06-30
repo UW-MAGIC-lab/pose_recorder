@@ -15,7 +15,7 @@ class CameraController():
   def render(self):
     # instantiate view
     self.view = CameraView(self.root)
-    self.view.pack()
+    self.view.pack(expand=True, fill='both')
     self.view.update()
     # instantiate models
     self.camera = VideoCapture(height=self.view.canvas_area.winfo_height(), width=self.view.canvas_area.winfo_width())

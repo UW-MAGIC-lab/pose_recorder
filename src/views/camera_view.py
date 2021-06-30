@@ -12,10 +12,13 @@ class CameraView(tkinter.Frame):
       Main Camera View
     """
     super().__init__(parent)
+    self.update()
     bg = parent["bg"]
     self["bg"] = bg
-    self.width = parent.winfo_screenwidth()
-    self.height = parent.winfo_screenheight()
+    self.parent = parent
+    self.width = parent.winfo_width()
+    self.height = parent.winfo_height()
+    print(f'width: {parent.winfo_width()}, height: {parent.winfo_height()}')
     self.fps = fps
     self.filename = None
     self.menu_font = font.Font(family='Helvetica', size=18, weight='bold')
@@ -26,6 +29,13 @@ class CameraView(tkinter.Frame):
     self._draw_status_bar()
     self.canvas_area = tkinter.Canvas(self, width=self.width*0.6, height=self.height * 0.8, bg=bg)
     self._arrange_view_grid()
+    self.grid_columnconfigure(0, weight=1)
+    self.grid_columnconfigure(1, weight=1)
+    self.grid_columnconfigure(2, weight=1)
+    self.grid_rowconfigure(0, weight=1)
+    self.grid_rowconfigure(1, weight=1)
+    self.grid_rowconfigure(2, weight=1)
+    self.grid_rowconfigure(3, weight=1)
 
   def update_canvas(self, frame):
     self.photo = PIL.ImageTk.PhotoImage(image=frame)
@@ -57,12 +67,10 @@ class CameraView(tkinter.Frame):
 
     self.start_record_btn = RoundedButton(
         self.left_menu, border_radius=3, padding=8, color="#7BD148", text='Start Recording', enabled=False)
-    self.start_record_btn.pack(anchor='n')
+    self.start_record_btn.pack(anchor='nw')
     self.stop_record_btn = RoundedButton(
         self.left_menu, border_radius=3, padding=8, color="#FF7537", text='Stop Recording', enabled=False)
-    self.stop_record_btn.pack(anchor='n')
-
-
+    self.stop_record_btn.pack(anchor='nw')
 
 
   def _arrange_view_grid(self):
